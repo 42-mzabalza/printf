@@ -20,8 +20,7 @@ int		main()
 	//printf(“\033[0;31m]”);
 	//printf("hola hola");
 
-	ft_printf("{RED} This text is RED!"    "\n");
-	ft_printf("hola hola");
+	ft_printf("%b", 20000000);
 	
 	return (0);
 }
