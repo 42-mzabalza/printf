@@ -6,7 +6,7 @@
 /*   By: mzabalza <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/07 22:07:57 by mzabalza          #+#    #+#             */
-/*   Updated: 2018/02/08 22:43:44 by mzabalza         ###   ########.fr       */
+/*   Updated: 2018/02/16 13:22:49 by mzabalza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 # include "../libft/libft.h"
 # include <stdarg.h>
 
-static char		type[] = "pdDioOuUxXcCsSb%\0";
-static char		notype[] = " 123456789.%hljz#0-+pdDioOuUxXcCsSb%\0";
+static char		g_type[] = "pdDioOuUxXcCsSb%\0";
+static char		g_notype[] = " 123456789.%hljz#0-+pdDioOuUxXcCsSb%\0";
 
 /*
 ** ------------------------- Parsing struct ------------------------------------

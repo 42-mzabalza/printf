@@ -19,9 +19,9 @@ static size_t	ft_lenformat(char *format)
 	len = 1;
 	while (*format)
 	{
-		if (!ft_strchr(notype, *format))
+		if (!ft_strchr(g_notype, *format))
 			return (len);
-		if (ft_strchr(type, *format))
+		if (ft_strchr(g_type, *format))
 			return (len);
 		len++;
 		format++;
