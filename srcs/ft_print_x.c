@@ -23,7 +23,7 @@ static int	ft_widthpadding(char *content, t_prefix *prefix, char *val)
 	rtn = ft_pstv(w);
 	while (w-- > 0)
 	{
-		if (prefix->zero && !prefix->left)
+		if (prefix->zero && !prefix->left && !ft_strchr(content, '.'))
 			ft_putchar('0');
 		else
 			ft_putchar(' ');
@@ -41,12 +41,12 @@ static int	ft_precisionpadding(t_prefix *prefix)
 	return (prefix->precision);
 }
 
-static void	ft_showx(char *str, char x, char *content)
+static void	ft_showx(intmax_t nb, char *str, char x, char *content)
 {
 	int i;
 
 	i = 0;
-	if (ft_atoi(str) == 0 && ft_strchr(content, '.'))
+	if (nb == 0 && ft_strchr(content, '.'))
 		return ;
 	while (str[i])
 	{
@@ -76,17 +76,20 @@ int			ft_print_x(intmax_t nb, char *content, t_prefix *prefix)
 	len = ft_strlen(val);
 	if (nb == 0 && ft_strchr(content, '.'))
 		len = 0;
-	prefix->rtn += len;
 	prefix->precision = ft_pstv(prefix->precision - len);
 	prefix->width = ft_pstv(prefix->width - len - prefix->precision);
-	if (ft_strchr(content, '#') && *val != '0' && prefix->zero)
+	if (nb == 0)
+		prefix->hash = 0;
+	if (prefix->hash && prefix->zero && !ft_strchr(content, '.'))
 		prefix->rtn += ft_prefix(content[ft_strlen(content) - 1]);
+	if (prefix->hash && prefix->zero && !ft_strchr(content, '.'))
+		prefix->hash = 0;
 	if (!(prefix->left))
 		prefix->rtn += ft_widthpadding(content, prefix, val);
-	if (ft_strchr(content, '#') && *val != '0' && !prefix->zero)
+	if (prefix->hash)
 		prefix->rtn += ft_prefix(content[ft_strlen(content) - 1]);
-	prefix->rtn += ft_precisionpadding(prefix);
-	ft_showx(val, content[ft_strlen(content) - 1], content);
+	prefix->rtn += ft_precisionpadding(prefix) + len;
+	ft_showx(nb, val, content[ft_strlen(content) - 1], content);
 	if ((prefix->left))
 		prefix->rtn += ft_widthpadding(content, prefix, val);
 	free(val);

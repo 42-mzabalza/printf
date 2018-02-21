@@ -35,6 +35,8 @@ typedef struct	s_prefix
 	int			left;
 	int			zero;
 	int			rtn;
+	int			hash;
+
 }				t_prefix;
 
 int				ft_printf(char *format, ...);

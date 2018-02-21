@@ -56,10 +56,17 @@ static int		ft_printcenter(char *content, va_list vlist, t_prefix *prefix)
 		return (ft_print_extra(content, prefix));
 }
 
+static void		ft_else(char c, int *dst)
+{
+	ft_putchar(c);
+	(*dst)++;
+}
+
 static int		ft_format_iter(char *format, va_list vlist, int dst)
 {
 	char		*content;
 	int			i;
+	int			rst;
 	t_prefix	*prefix;
 
 	i = 0;
@@ -69,16 +76,14 @@ static int		ft_format_iter(char *format, va_list vlist, int dst)
 		{
 			content = ft_strsub(format, i + 1, ft_lenformat(&format[i + 1]));
 			prefix = ft_newprefix(content);
-			dst += ft_printcenter(content, vlist, prefix);
+			rst = ft_printcenter(content, vlist, prefix);
+			dst += rst;
 			i += ft_lenformat(&format[i + 1]);
 			free(content);
 			free(prefix);
 		}
 		else
-		{
-			ft_putchar(format[i]);
-			dst++;
-		}
+			ft_else(format[i], &dst);
 		i++;
 	}
 	return (dst);

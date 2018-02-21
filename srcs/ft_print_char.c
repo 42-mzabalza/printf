@@ -12,32 +12,42 @@
 
 #include "ft_printf.h"
 
-static int	ft_widthpadding(char *content, t_prefix *prefix)
+static int	ft_widthpadding(char *content, t_prefix *prefix, char s)
 {
+	int rtn;
 	int w;
 
-	w = prefix->width - 1;
+	w = ft_pstv(prefix->width - 1);
+	if (ft_strchr(content, 'l') || s == 'C')
+		w = ft_pstv(w - 1);
+	rtn = w;
 	while (w-- > 0)
 		if (prefix->zero)
 			ft_putchar('0');
 		else
 			ft_putchar(' ');
-	if (ft_strchr(content, 'l'))
-		return (-2);
-	return (0);
+	return (rtn);
 }
 
 int			ft_print_char(va_list v, char *content, t_prefix *prefix, char s)
 {
-	prefix->rtn = ft_pstv(prefix->width - 1);
+	int i;
+
 	if (!prefix->left)
-		prefix->rtn += ft_pstv(ft_widthpadding(content, prefix));
+		prefix->rtn += ft_pstv(ft_widthpadding(content, prefix, s));
 	if (ft_strchr(content, 'l') || s == 'C')
-		return (ft_print_lc(v));
+	{
+		i = ft_print_lc(v);
+		if (i == -1)
+			return (-1);
+		prefix->rtn += i;
+	}
 	else
+	{
 		ft_print_c(v);
+		prefix->rtn++;
+	}
 	if (prefix->left)
-		prefix->rtn += ft_pstv(ft_widthpadding(content, prefix));
-	prefix->rtn++;
+		prefix->rtn += ft_pstv(ft_widthpadding(content, prefix, s));
 	return (prefix->rtn);
 }

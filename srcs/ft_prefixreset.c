@@ -20,5 +20,6 @@ t_prefix	*ft_prefixreset(t_prefix *prefix)
 	prefix->left = 0;
 	prefix->zero = 0;
 	prefix->rtn = 0;
+	prefix->hash = 0;
 	return (prefix);
 }

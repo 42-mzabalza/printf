@@ -31,6 +31,49 @@ int			ft_strwidthpadding(t_prefix *prefix, char *content)
 	return (rtn);
 }
 
+static int	ft_showstr(char *str, char *content, t_prefix *prefix)
+{
+	int p;
+	int dot;
+	int i;
+
+	dot = 0;
+	i = 0;
+	if (ft_strchr(content, '.'))
+		dot = 1;
+	p = prefix->precision;
+	while (str[i])
+	{
+		if (dot && !p)
+			return (i);
+		ft_putchar(str[i]);
+		i++;
+		p--;
+	}
+	return (i);
+}
+
+static int	ft_showlen(char *str, char *content, t_prefix *prefix)
+{
+	int p;
+	int dot;
+	int i;
+
+	dot = 0;
+	i = 0;
+	if (ft_strchr(content, '.'))
+		dot = 1;
+	p = prefix->precision;
+	while (str[i])
+	{
+		if (dot && !p)
+			return (i);
+		i++;
+		p--;
+	}
+	return (i);
+}
+
 int			ft_print_s(va_list v, char *content, t_prefix *p, char specifier)
 {
 	char	*str;
@@ -38,19 +81,14 @@ int			ft_print_s(va_list v, char *content, t_prefix *p, char specifier)
 	if (ft_strchr(content, 'l') || specifier == 'S')
 		return (ft_print_ls(v, content, p));
 	str = va_arg(v, char *);
-	if (ft_strchr(content, '.') && str
-			&& !(p->precision >= (int)ft_strlen(str)))
-		str = ft_strsub(str, 0, p->precision);
-	p->precision = ft_pstv(p->precision - ft_strlen(str));
-	if (str == NULL && !ft_strchr(content, '.'))
+	if (str == NULL)
 		str = "(null)";
-	p->width = ft_pstv(p->width - ft_strlen(str));
+	p->width = ft_pstv(p->width - ft_showlen(str, content, p));
 	p->rtn += p->width;
 	if (!ft_strchr(content, '-'))
 		ft_strwidthpadding(p, content);
-	ft_putstr(str);
+	p->rtn += ft_showstr(str, content, p);
 	if (ft_strchr(content, '-'))
 		ft_strwidthpadding(p, content);
-	p->rtn += ft_strlen(str);
 	return (p->rtn);
 }

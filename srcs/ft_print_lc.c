@@ -59,6 +59,19 @@ int			ft_utf8(long *bin, int i)
 	return (dst);
 }
 
+static int	ft_unicase(int val, int *bytes)
+{
+	if (val > 1114111 || val < 0)
+		return (-1);
+	if (val > 55295 && val < 57344)
+		return (-1);
+	else if (val < 2047)
+		*bytes = 110;
+	else if (val < 65535)
+		*bytes = 1110;
+	return (1);
+}
+
 int			ft_print_lc(va_list vlist)
 {
 	int		val;
@@ -69,14 +82,12 @@ int			ft_print_lc(va_list vlist)
 
 	bytes = 11110;
 	val = va_arg(vlist, int);
+	if (ft_unicase(val, &bytes) == -1)
+		return (-1);
 	if (val <= 127)
 		return (write(1, &val, 1));
 	if (val <= 127 || val >= 2097151)
 		return (0);
-	else if (val < 2047)
-		bytes = 110;
-	else if (val < 65535)
-		bytes = 1110;
 	bin = ft_dectobin(val);
 	dst = (char *)malloc(sizeof(char) * ft_ndigits(bytes) - 1);
 	i = ft_ndigits(bytes) - 1;

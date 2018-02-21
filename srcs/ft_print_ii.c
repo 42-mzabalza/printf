@@ -73,12 +73,12 @@ int				ft_print_ii(intmax_t val, char *content, t_prefix *prefix)
 	prefix->precision = ft_pstv(prefix->precision - ft_ndigits(val));
 	prefix->width = ft_pstv(prefix->width - ft_ndigits(val));
 	prefix->width = ft_pstv(prefix->width - prefix->precision);
-	if (prefix->zero && prefix->width)
+	if (prefix->zero && prefix->width && !ft_strchr(content, '.'))
 		prefix->rtn += ft_putsign(val, prefix);
 	ft_ispaceflag(content, val, &prefix);
 	if (!(prefix->left))
 		prefix->rtn += ft_widthpadding(prefix, val, content);
-	if (!prefix->zero || (prefix->zero && !prefix->width))
+	if (!(prefix->zero && prefix->width && !ft_strchr(content, '.')))
 		prefix->rtn += ft_putsign(val, prefix);
 	prefix->rtn += ft_precisionpadding(prefix);
 	if (val == 0 && ft_strchr(content, '.') &&

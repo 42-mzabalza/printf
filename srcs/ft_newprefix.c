@@ -38,6 +38,8 @@ static void	ft_parsecontent(char *content, t_prefix *prefix)
 		prefix->sign = 1;
 	if (ft_strchr(content, '-'))
 		prefix->left = 1;
+	if (ft_strchr(content, '#'))
+		prefix->hash = 1;
 }
 
 t_prefix	*ft_newprefix(char *content)

@@ -12,14 +12,12 @@
 
 #include "ft_printf.h"
 
-static int	ft_widthpadding(char *content, t_prefix *prefix, char *val)
+static int	ft_widthpadding(char *content, t_prefix *prefix)
 {
 	int rtn;
 	int w;
 
-	w = prefix->width;
-	if ((ft_strchr(content, '#')) && *val != '0')
-		w--;
+	w = prefix->width - prefix->hash;
 	rtn = ft_pstv(w);
 	while (w-- > 0)
 	{
@@ -31,25 +29,24 @@ static int	ft_widthpadding(char *content, t_prefix *prefix, char *val)
 	return (rtn);
 }
 
-static int	ft_precisionpadding(char *content, t_prefix *prefix, char *val)
+static int	ft_precisionpadding(t_prefix *prefix)
 {
 	int rtn;
 	int p;
 
 	p = prefix->precision;
-	if ((ft_strchr(content, '#')) && *val != '0')
-		p--;
 	rtn = ft_pstv(p);
 	while (p-- > 0)
 		ft_putchar('0');
 	return (rtn);
 }
 
-static void	ft_showo(char *str, char *content)
+static void	ft_showo(char *str, t_prefix *prefix, char *content, int nb)
 {
-	if (ft_atoi(str) == 0 && ft_strchr(content, '.'))
-		return ;
-	if (ft_atoi(str) == 0 && ft_strchr(content, '#'))
+	int i;
+
+	i = prefix->hash;
+	if (nb == 0 && ft_strchr(content, '.'))
 		return ;
 	ft_putstr(str);
 }
@@ -61,21 +58,22 @@ int			ft_print_o(intmax_t nb, char *content, t_prefix *prefix)
 
 	val = ft_uimaxtoa_base(nb, 8);
 	len = ft_strlen(val);
-	if (nb == 0 && (ft_strchr(content, '.') || ft_strchr(content, '#')))
+	if (nb == 0 && ft_strchr(content, '.'))
 		len = 0;
-	prefix->rtn += len;
-	prefix->precision = ft_pstv(prefix->precision - len);
+	if (!ft_strchr(content, '.') && prefix->precision == 0 && nb == 0)
+		prefix->hash = 0;
+	prefix->precision = ft_pstv(prefix->precision - len - prefix->hash);
 	prefix->width = ft_pstv(prefix->width - len - prefix->precision);
-	if (ft_strchr(content, '#'))
+	if (prefix->hash)
 		prefix->rtn++;
 	if (!(prefix->left))
-		prefix->rtn += ft_widthpadding(content, prefix, val);
-	if (ft_strchr(content, '#'))
+		prefix->rtn += ft_widthpadding(content, prefix);
+	if (prefix->hash)
 		ft_putchar('0');
-	prefix->rtn += ft_precisionpadding(content, prefix, val);
-	ft_showo(val, content);
+	prefix->rtn += ft_precisionpadding(prefix) + len;
+	ft_showo(val, prefix, content, nb);
 	if ((prefix->left))
-		prefix->rtn += ft_widthpadding(content, prefix, val);
+		prefix->rtn += ft_widthpadding(content, prefix);
 	free(val);
 	return (prefix->rtn);
 }
